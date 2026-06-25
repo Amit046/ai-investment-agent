@@ -165,21 +165,7 @@ Prompted Gemini to return only valid JSON with explicit schema. Tradeoff: occasi
 
 ---
 
-## AI Usage
 
-This project was built using **Claude (Anthropic)** as the primary AI assistant throughout development.
-
-AI was used for:
-- Architecture planning across 8 phases before any code was written
-- TypeScript type definitions and boilerplate
-- LangGraph workflow design and implementation
-- Prompt engineering for the Gemini decision node
-- Component structure and Tailwind styling
-- README drafting
-
-All code was reviewed, understood, and is fully explainable. The complete LLM chat transcript is included in `/llm-transcript/claude-session.md` as required by the assignment bonus criteria.
-
----
 
 ## Project Structure
 
