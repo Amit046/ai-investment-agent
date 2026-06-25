@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #080808;
+  --bg-card: #0f0f0f;
+  --bg-card-hover: #141414;
+  --border: #1e1e1e;
+  --border-subtle: #161616;
+  --text-primary: #e8e8e8;
+  --text-secondary: #888888;
+  --text-muted: #444444;
+  --accent-gold: #c9a84c;
+  --accent-gold-dim: #8a6f2e;
+  --invest-green: #22c55e;
+  --invest-green-bg: #052010;
+  --pass-red: #ef4444;
+  --pass-red-bg: #1a0505;
+  --score-high: #22c55e;
+  --score-mid: #eab308;
+  --score-low: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 2px;
+}
+
+/* Subtle grid texture for the background */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Score bar animation */
+.score-bar-fill {
+  transition: width 1s ease-out;
+}
