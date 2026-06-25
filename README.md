@@ -4,7 +4,7 @@ An AI-powered investment research tool that analyzes any company and generates a
 
 Built for the **InsideIIM × Altuni AI Labs** AI Engineer Intern assignment.
 
-🔗 **Live Demo:** [your-app.vercel.app](https://your-app.vercel.app) ← replace after deploying
+🔗 **Live Demo:** https://ai-investment-agent-6djw.onrender.com
 
 ---
 
