@@ -43,18 +43,18 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a]">
+    <main className="min-h-screen bg-slate-50">
       {/* Header */}
-      <div className="border-b border-[#1a1a1a]">
+      <div className="border-b border-slate-200 bg-white">
         <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center">
-            <TrendingUp size={16} className="text-zinc-300" />
+          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
+            <TrendingUp size={16} className="text-white" />
           </div>
           <div>
-            <h1 className="text-sm font-semibold text-zinc-100 tracking-tight">
+            <h1 className="text-sm font-semibold text-slate-900 tracking-tight">
               AI Investment Research Agent
             </h1>
-            <p className="text-xs text-zinc-500">Powered by Gemini · LangGraph · Tavily</p>
+            <p className="text-xs text-slate-500">Powered by Gemini · LangGraph · Tavily</p>
           </div>
         </div>
       </div>
@@ -63,12 +63,12 @@ export default function Home() {
         {/* Hero — only on idle */}
         {status === "idle" && (
           <div className="mb-10 text-center">
-            <h2 className="text-3xl font-bold text-zinc-100 tracking-tight mb-3">
+            <h2 className="text-3xl font-bold text-slate-900 tracking-tight mb-3">
               Research any company.
               <br />
-              <span className="text-zinc-500">Get an invest or pass verdict.</span>
+              <span className="text-blue-600">Get an invest or pass verdict.</span>
             </h2>
-            <p className="text-sm text-zinc-500 max-w-md mx-auto">
+            <p className="text-sm text-slate-500 max-w-md mx-auto">
               Enter a company name. The agent searches the web, analyzes the data,
               and generates a structured investment report.
             </p>
@@ -92,9 +92,9 @@ export default function Home() {
 
         {/* Error */}
         {status === "error" && error && (
-          <div className="mt-8 rounded-xl border border-red-900/40 bg-red-950/20 px-5 py-4">
-            <p className="text-sm font-medium text-red-400">Research failed</p>
-            <p className="text-sm text-red-400/70 mt-1">{error}</p>
+          <div className="mt-8 rounded-xl border border-red-200 bg-red-50 px-5 py-4">
+            <p className="text-sm font-medium text-red-600">Research failed</p>
+            <p className="text-sm text-red-400 mt-1">{error}</p>
           </div>
         )}
 
