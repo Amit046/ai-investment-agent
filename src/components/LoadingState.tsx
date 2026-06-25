@@ -26,23 +26,23 @@ export default function LoadingState({ companyName }: LoadingStateProps) {
   }, []);
 
   return (
-    <div className="rounded-xl border border-[#1e1e1e] bg-[#111111] px-6 py-8 flex flex-col items-center gap-5">
-      <Loader2 size={28} className="animate-spin text-zinc-400" />
+    <div className="rounded-xl border border-slate-200 bg-white px-6 py-8 flex flex-col items-center gap-5 shadow-sm">
+      <Loader2 size={28} className="animate-spin text-blue-600" />
       <div className="text-center">
-        <p className="text-sm font-medium text-zinc-300">Researching {companyName}</p>
-        <p className="text-xs text-zinc-500 mt-1">{STEPS[stepIndex]}</p>
+        <p className="text-sm font-medium text-slate-700">Researching {companyName}</p>
+        <p className="text-xs text-slate-400 mt-1">{STEPS[stepIndex]}</p>
       </div>
       <div className="flex gap-1.5">
         {STEPS.map((_, i) => (
           <div
             key={i}
             className={`h-1 rounded-full transition-all duration-500 ${
-              i <= stepIndex ? "w-5 bg-zinc-400" : "w-1.5 bg-zinc-700"
+              i <= stepIndex ? "w-5 bg-blue-500" : "w-1.5 bg-slate-200"
             }`}
           />
         ))}
       </div>
-      <p className="text-xs text-zinc-600">This takes about 10–15 seconds</p>
+      <p className="text-xs text-slate-400">This takes about 10–15 seconds</p>
     </div>
   );
 }
