@@ -11,6 +11,7 @@ export interface ResearchRequest {
 // ─────────────────────────────────────────
 
 export type Verdict = "INVEST" | "PASS";
+export type Confidence = "HIGH" | "MEDIUM" | "LOW";
 
 export interface InvestmentReport {
   companyName: string;
@@ -21,6 +22,24 @@ export interface InvestmentReport {
   score: number;
   verdict: Verdict;
   reasoning: string;
+  confidence: Confidence;
+  confidenceReason: string;
+}
+
+// ─────────────────────────────────────────
+// COMPETITOR ANALYSIS
+// ─────────────────────────────────────────
+
+export interface Competitor {
+  name: string;
+  strength: string;
+  weakness: string;
+  vsOurCompany: string;
+}
+
+export interface CompetitorAnalysis {
+  competitors: Competitor[];
+  marketPosition: string;
 }
 
 // ─────────────────────────────────────────
@@ -30,6 +49,8 @@ export interface InvestmentReport {
 export interface ApiSuccessResponse {
   success: true;
   report: InvestmentReport;
+  competitorAnalysis: CompetitorAnalysis | null;
+  tavilyFailed: boolean;
 }
 
 export interface ApiErrorResponse {
@@ -54,6 +75,8 @@ export interface AgentState {
   companyName: string;
   rawResearch: RawResearch | null;
   report: InvestmentReport | null;
+  competitorAnalysis: CompetitorAnalysis | null;
+  tavilyFailed: boolean;
 }
 
 // ─────────────────────────────────────────

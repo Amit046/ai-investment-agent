@@ -3,8 +3,9 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 import { Annotation, StateGraph, END, START } from "@langchain/langgraph";
 import { researchNode } from "./nodes/researchNode";
+import { competitorNode } from "./nodes/competitorNode";
 import { decisionNode } from "./nodes/decisionNode";
-import { InvestmentReport, RawResearch } from "@/types";
+import { CompetitorAnalysis, InvestmentReport, RawResearch } from "@/types";
 
 const AgentAnnotation = Annotation.Root({
   companyName: Annotation<string>({
@@ -23,6 +24,18 @@ const AgentAnnotation = Annotation.Root({
     ) => (next !== undefined ? next : _prev),
     default: () => null,
   }),
+  competitorAnalysis: Annotation<CompetitorAnalysis | null>({
+    reducer: (
+      _prev: CompetitorAnalysis | null,
+      next: CompetitorAnalysis | null
+    ) => (next !== undefined ? next : _prev),
+    default: () => null,
+  }),
+  tavilyFailed: Annotation<boolean>({
+    reducer: (_prev: boolean, next: boolean) =>
+      next !== undefined ? next : _prev,
+    default: () => false,
+  }),
 });
 
 export type GraphState = typeof AgentAnnotation.State;
@@ -32,11 +45,14 @@ export function buildGraph() {
   const graph = new StateGraph(AgentAnnotation) as any;
 
   graph.addNode("research", researchNode);
+  graph.addNode("competitor", competitorNode);
   graph.addNode("decision", decisionNode);
 
   graph.addEdge(START, "research");
-  graph.addEdge("research", "decision");
+  graph.addEdge("research", "competitor");
+  graph.addEdge("competitor", "decision");
   graph.addEdge("decision", END);
 
   return graph.compile();
 }
+

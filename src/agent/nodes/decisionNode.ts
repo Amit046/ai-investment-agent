@@ -1,7 +1,11 @@
 import { AgentState, InvestmentReport } from "@/types";
 import { callGemini } from "@/lib/gemini";
 
-function buildPrompt(companyName: string, research: AgentState["rawResearch"]): string {
+function buildPrompt(
+  companyName: string,
+  research: AgentState["rawResearch"],
+  tavilyFailed: boolean
+): string {
   if (!research) throw new Error("No research data available");
 
   return `You are a professional investment research analyst. Your job is to analyze research data about a company and produce a structured investment report.
@@ -9,6 +13,7 @@ function buildPrompt(companyName: string, research: AgentState["rawResearch"]): 
 You must respond with ONLY valid JSON. No markdown. No code fences. No explanation. Just the raw JSON object.
 
 Company being analyzed: ${companyName}
+Web Search Status: ${tavilyFailed ? "FAILED (data is based on fallback model knowledge)" : "SUCCESS (live web search data)"}
 
 RESEARCH DATA:
 
@@ -34,7 +39,9 @@ Based on the research above, generate an investment report in this exact JSON fo
   "riskFactors": ["risk 1", "risk 2", "risk 3", "risk 4"],
   "score": 65,
   "verdict": "INVEST",
-  "reasoning": "2-3 sentences explaining why this verdict was chosen based on the balance of factors and score"
+  "reasoning": "2-3 sentences explaining why this verdict was chosen based on the balance of factors and score",
+  "confidence": "HIGH",
+  "confidenceReason": "1-2 sentences explaining why this confidence rating was assigned based on research quality and source reliability"
 }
 
 Scoring guide:
@@ -42,20 +49,27 @@ Scoring guide:
 - 50 to 69: Mixed signals, some opportunity but notable risks → use judgment based on balance
 - 0 to 49: High risk, weak fundamentals, or significant red flags → verdict should be PASS
 
+Confidence assessment guide:
+- LOW: Set if the research data was thin, sparse, contradictory, or if Web Search Status was FAILED / fallback data was used instead of live search.
+- MEDIUM: Set if research was decent and informative, but some signals conflict, data is incomplete, or key metrics are uncertain.
+- HIGH: Set ONLY if research was rich, up-to-date, detailed, and highly consistent across sources with clear financial/operational data.
+
 Rules:
 - positiveFactors must be an array of 3 to 5 strings
 - riskFactors must be an array of 3 to 5 strings  
 - score must be a number between 0 and 100
 - verdict must be exactly "INVEST" or "PASS"
+- confidence must be exactly "HIGH", "MEDIUM", or "LOW"
+- confidenceReason must be 1 to 2 sentences explaining the reasoning behind the confidence score
 - Be honest and balanced — not every company should be INVEST`;
 }
 
 export async function decisionNode(state: AgentState): Promise<Partial<AgentState>> {
-  const { companyName, rawResearch } = state;
+  const { companyName, rawResearch, tavilyFailed } = state;
 
   console.log(`[DecisionNode] Generating report for: ${companyName}`);
 
-  const prompt = buildPrompt(companyName, rawResearch);
+  const prompt = buildPrompt(companyName, rawResearch, tavilyFailed);
   const rawResponse = await callGemini(prompt);
 
   // Strip any accidental markdown fences Gemini might add
@@ -81,7 +95,16 @@ export async function decisionNode(state: AgentState): Promise<Partial<AgentStat
     report.score = 50; // fallback
   }
 
-  console.log(`[DecisionNode] Report generated. Verdict: ${report.verdict}, Score: ${report.score}`);
+  if (!report.confidence || !["HIGH", "MEDIUM", "LOW"].includes(report.confidence)) {
+    report.confidence = tavilyFailed ? "LOW" : "MEDIUM";
+  }
+
+  if (!report.confidenceReason || typeof report.confidenceReason !== "string") {
+    report.confidenceReason = "Confidence assessed based on data consistency and depth.";
+  }
+
+  console.log(`[DecisionNode] Report generated. Verdict: ${report.verdict}, Score: ${report.score}, Confidence: ${report.confidence}`);
 
   return { report };
 }
+

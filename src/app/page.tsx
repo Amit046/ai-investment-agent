@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { InvestmentReport, UIStatus, ApiResponse } from "@/types";
+import { InvestmentReport, CompetitorAnalysis, UIStatus, ApiResponse } from "@/types";
 import SearchForm from "@/components/SearchForm";
 import LoadingState from "@/components/LoadingState";
 import ResultsSection from "@/components/ResultsSection";
@@ -11,26 +11,34 @@ export default function Home() {
   const [company, setCompany] = useState("");
   const [status, setStatus] = useState<UIStatus>("idle");
   const [report, setReport] = useState<InvestmentReport | null>(null);
+  const [competitorAnalysis, setCompetitorAnalysis] = useState<CompetitorAnalysis | null>(null);
+  const [tavilyFailed, setTavilyFailed] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function handleSubmit() {
-    if (!company.trim()) return;
+  async function handleSubmit(overrideCompany?: string) {
+    const targetCompany = (overrideCompany !== undefined ? overrideCompany : company).trim();
+    if (!targetCompany) return;
+    if (overrideCompany) setCompany(targetCompany);
 
     setStatus("loading");
     setReport(null);
+    setCompetitorAnalysis(null);
+    setTavilyFailed(false);
     setError(null);
 
     try {
       const res = await fetch("/api/research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ companyName: company.trim() }),
+        body: JSON.stringify({ companyName: targetCompany }),
       });
 
       const data: ApiResponse = await res.json();
 
       if (data.success) {
         setReport(data.report);
+        setCompetitorAnalysis(data.competitorAnalysis ?? null);
+        setTavilyFailed(data.tavilyFailed ?? false);
         setStatus("success");
       } else {
         setError(data.error);
@@ -41,6 +49,8 @@ export default function Home() {
       setStatus("error");
     }
   }
+
+
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -101,9 +111,14 @@ export default function Home() {
         {/* Results */}
         {status === "success" && report && (
           <div className="mt-10">
-            <ResultsSection report={report} />
+            <ResultsSection
+              report={report}
+              competitorAnalysis={competitorAnalysis}
+              tavilyFailed={tavilyFailed}
+            />
           </div>
         )}
+
       </div>
     </main>
   );

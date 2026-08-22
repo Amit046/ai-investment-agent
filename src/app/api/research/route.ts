@@ -2,6 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { buildGraph } from "@/agent/graph";
+import { createInitialState } from "@/agent/state";
 import { ApiErrorResponse, ApiSuccessResponse } from "@/types";
 
 export const maxDuration = 60;
@@ -23,11 +24,7 @@ export async function POST(request: NextRequest) {
     console.log(`[API] Research request for: ${sanitized}`);
 
     const graph = buildGraph();
-    const finalState = await graph.invoke({
-      companyName: sanitized,
-      rawResearch: null,
-      report: null,
-    });
+    const finalState = await graph.invoke(createInitialState(sanitized));
 
     if (!finalState.report) {
       const error: ApiErrorResponse = {
@@ -40,9 +37,12 @@ export async function POST(request: NextRequest) {
     const success: ApiSuccessResponse = {
       success: true,
       report: finalState.report,
+      competitorAnalysis: finalState.competitorAnalysis ?? null,
+      tavilyFailed: finalState.tavilyFailed ?? false,
     };
 
     return NextResponse.json(success, { status: 200 });
+
   } catch (error) {
     console.error("[API] Error:", error);
     const errorMessage =

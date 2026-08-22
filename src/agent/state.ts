@@ -5,5 +5,9 @@ export function createInitialState(companyName: string): AgentState {
     companyName,
     rawResearch: null,
     report: null,
+    competitorAnalysis: null,
+    tavilyFailed: false,
   };
 }
+
+export type { AgentState };
