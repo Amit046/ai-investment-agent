@@ -13,7 +13,7 @@ Built for the **InsideIIM × Altuni AI Labs** AI Engineer Intern assignment.
 This tool takes a company name as input and runs a two-node LangGraph.js workflow:
 
 1. **Research Node** — runs 4 parallel Tavily web searches (company overview, recent news, growth opportunities, business risks)
-2. **Decision Node** — passes all research to Gemini 2.5 Flash, which generates a structured investment report
+2. **Decision Node** — passes all research to Gemini 2.5 Flash Lite, which generates a structured investment report
 
 **The final report contains:**
 - Company Overview
@@ -85,7 +85,7 @@ LangGraph StateGraph
   │
   └── Node 2: Decision
         └── builds structured prompt
-        └── calls Gemini 2.5 Flash (temp: 0.3)
+        └── calls Gemini 2.5 Flash Lite (temp: 0.3)
         └── parses JSON response
         └── writes → state.report
   │
@@ -103,7 +103,7 @@ Frontend renders 6 result cards
 | Frontend | Next.js 15, TypeScript |
 | Styling | Tailwind CSS |
 | Backend | Next.js API Routes (serverless) |
-| AI | Gemini 2.5 Flash |
+| AI | Gemini 2.5 Flash Lite |
 | Search | Tavily Search API |
 | AI Framework | LangGraph.js |
 | Deployment | Vercel |
@@ -118,7 +118,7 @@ Chose LangGraph over a simple sequential function call because it makes the work
 **Tavily for web search**
 Chose Tavily over SerpAPI because it returns clean pre-extracted content rather than raw HTML — no scraping needed. Free tier covers this assignment. Tradeoff: less control over source selection.
 
-**Gemini 2.5 Flash**
+**Gemini 2.5 Flash Lite**
 Chose Flash over Pro because latency matters — 4 search results need to be synthesized quickly. Flash handles structured JSON output reliably at temperature 0.3. Tradeoff: slightly less reasoning depth than Pro, acceptable at this scope.
 
 **Stateless architecture (no database)**

@@ -14,7 +14,7 @@ function getClient(): GoogleGenerativeAI {
 export async function callGemini(prompt: string, retries = 3): Promise<string> {
   const genAI = getClient();
   const model = genAI.getGenerativeModel({
-    model: "gemini-2.0-flash",
+    model: "gemini-flash-lite-latest",
     generationConfig: {
       temperature: 0.3,
     },
@@ -35,10 +35,11 @@ export async function callGemini(prompt: string, retries = 3): Promise<string> {
         err?.message?.includes("fetch failed") ||
         err?.message?.includes("Resource has been exhausted");
 
-
       if (isTransient && attempt < retries) {
         const delay = attempt * 2000;
-        console.warn(`[Gemini] Attempt ${attempt} hit transient error (${err?.status || err?.message?.slice(0, 40)}), retrying in ${delay}ms...`);
+        console.warn(
+          `[Gemini] Attempt ${attempt} hit transient error (${err?.status || err?.message?.slice(0, 40)}), retrying in ${delay}ms...`
+        );
         await new Promise((resolve) => setTimeout(resolve, delay));
         continue;
       }
@@ -50,4 +51,6 @@ export async function callGemini(prompt: string, retries = 3): Promise<string> {
 }
 
 export const geminiSearch = callGemini;
+
+
 
