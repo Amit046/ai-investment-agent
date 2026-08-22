@@ -14,7 +14,7 @@ function getClient(): GoogleGenerativeAI {
 export async function callGemini(prompt: string, retries = 3): Promise<string> {
   const genAI = getClient();
   const model = genAI.getGenerativeModel({
-    model: "gemini-3.6-flash",
+    model: "gemini-2.0-flash",
     generationConfig: {
       temperature: 0.3,
     },
